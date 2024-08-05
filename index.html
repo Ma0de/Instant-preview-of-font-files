@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>字体预览 Font preview</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        #preview {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        .upload-container {
+            margin: 20px 0;
+        }
+        #previewText {
+            margin: 20px 0;
+        }
+        .font-container {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        input[type="file"] {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>字体预览 Font preview</h1>
+
+    <div class="font-container">
+        <div id="preview">
+            <p>abcdefghijklmnopqrstuvwxyz</p>
+            <p>ABCDEFGHIJKLMNOPQRSTUVWXYZ</p>
+            <p>0123456789</p>
+            <p>!@#$%^&*()_+-=[]{}|;:',.<>?/</p>
+            <p>这是一段文字，用于预览字体</p>
+        </div>
+    </div>
+
+    <div class="upload-container">
+        <input type="file" id="fontUploader" accept=".woff,.woff2,.ttf,.otf">
+        <p>上传字体文件以更改预览 Upload the font file to change the preview</p>
+    </div>
+
+
+
+    <script>
+        const preview = document.getElementById('preview');
+        const fontUploader = document.getElementById('fontUploader');
+
+        fontUploader.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const fontUrl = e.target.result;
+                    const fontFace = new FontFace('UploadedFont', `url(${fontUrl})`);
+                    fontFace.load().then(function(loadedFontFace) {
+                        document.fonts.add(loadedFontFace);
+                        preview.style.fontFamily = 'UploadedFont';
+                        previewText.style.fontFamily = 'UploadedFont';
+                    }).catch(function(error) {
+                        console.error('加载字体时出错 Error loading font:', error);
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>
